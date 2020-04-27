@@ -1,0 +1,24 @@
+Data:wc_zeros     TYPE p DECIMALS 2.
+
+GRO_WEI_VAL tem 14 decimais vou converter para 2
+
+
+* Peso
+      CALL FUNCTION 'ROUND'
+        EXPORTING
+          input         = e_capa_item-gro_wei_val
+        IMPORTING
+          output        = wc_zeros
+        EXCEPTIONS
+          input_invalid = 1
+          overflow      = 2
+          type_invalid  = 3
+          OTHERS        = 4.
+
+      e_info_carga-peso = wc_zeros.
+      CONDENSE e_info_carga-peso.
+      REPLACE ALL OCCURRENCES OF '.'  IN e_info_carga-peso WITH ','.
+      FIND ALL OCCURRENCES OF ',' IN e_info_carga-peso RESULTS DATA(lt_result).
+      IF line_exists( lt_result[ 2 ] ).
+        REPLACE FIRST OCCURRENCE OF ',' IN e_info_carga-peso WITH '.'.
+      ENDIF.
